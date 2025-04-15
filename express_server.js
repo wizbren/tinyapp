@@ -39,6 +39,11 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);             // Render values
 });
 
+app.post("/urls", (req, res) => {
+  console.log(req.body);   // POST request logs to console
+  res.send("Did it work?");          // Response
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
