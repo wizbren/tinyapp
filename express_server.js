@@ -74,7 +74,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;              // Gets shortURL from id
-  const newLongURL = req.params.longURL; // Gets new longURL from form(?)
+  const newLongURL = req.body.longURL; // Gets new longURL from form(?)
   urlDatabase[id] = newLongURL;          // Updates database
 
   res.redirect("/urls");                 // Redirects user to main page
