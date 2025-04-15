@@ -48,8 +48,11 @@ app.get("/urls/:id", (req, res) => {
 // ============POST=============
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);       // POST request logs to console
-  res.send("Did it work?");    // Response
+  const longURL = req.body.longURL;  // Gets longURL from form
+  const id = generateRandomString(); // Creates shortURL id
+  urlDatabase[id] = longURL;         // Saves both short and long to database...(?)
+  
+  res.redirect(`/urls/${id}`);       // Redirect to the shortURL page
 });
 
 app.listen(PORT, () => {
