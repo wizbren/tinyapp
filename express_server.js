@@ -3,6 +3,8 @@ const app = express();
 const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 
+app.use(express.urlencoded({ extended: true }));
+
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
@@ -10,10 +12,6 @@ const urlDatabase = {
 
 app.get("/", (req, res) => {
   res.send("Hello!");
-});
-
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -29,10 +27,18 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
 app.get("/urls/:id", (req, res) => {
   const id = req.params.id;           // Gets ID from route
   const longURL = urlDatabase[id];    // Checks database for the URL
   
   const templateVars = { id: id, longURL: longURL};  // Defines longURL object
   res.render("urls_show", templateVars);             // Render values
+});
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
 });
