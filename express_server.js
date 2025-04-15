@@ -10,6 +10,10 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
+function generateRandomString() {
+  return Math.random().toString(36).substring(2, 8);
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -40,8 +44,8 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);   // POST request logs to console
-  res.send("Did it work?");          // Response
+  console.log(req.body);       // POST request logs to console
+  res.send("Did it work?");    // Response
 });
 
 app.listen(PORT, () => {
