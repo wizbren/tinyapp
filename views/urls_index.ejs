@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My URLs</title>
+  </head>
+  <body>
+    <h1>My URLs</h1>
+    <ul>
+      <% for (let shortURL in urls) { %>
+        <li><%= shortURL %>: <%= urls[shortURL] %></li>
+      <% } %>
+    </ul>
+  </body>
+</html>
