@@ -14,6 +14,8 @@ function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
 }
 
+// ============GET=============
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -42,6 +44,8 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { id: id, longURL: longURL};  // Defines longURL object
   res.render("urls_show", templateVars);             // Render values
 });
+
+// ============POST=============
 
 app.post("/urls", (req, res) => {
   console.log(req.body);       // POST request logs to console
