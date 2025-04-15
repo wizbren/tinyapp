@@ -45,6 +45,17 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);             // Render values
 });
 
+app.get("/u/:id", (req, res) => {
+  const id = req.params.id;         // Gets shortURL id
+  const longURL = urlDatabase[id];  // Checks longURL in database
+
+  if (longURL) {
+    res.redirect(longURL);          // Redirects to correct page
+  } else {
+    res.status(404).send("Short URL not found."); // 404 error message
+  }
+});
+
 // ============POST=============
 
 app.post("/urls", (req, res) => {
