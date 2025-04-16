@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
-app.use(cookieParser());
-const PORT = 8080; // default port 8080
-app.set("view engine", "ejs");
+app.use(cookieParser());   // Middleware for reading/writing cookies
 
-app.use(express.urlencoded({ extended: true }));
+const PORT = 8080;             // default port 8080
+app.set("view engine", "ejs"); // EJS renders HTML templates
+
+app.use(express.urlencoded({ extended: true }));  // Middleware for reading forms
 
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
