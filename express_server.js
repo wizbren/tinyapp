@@ -31,11 +31,12 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, username: req.cookies.username }; // Pass username to template
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
+  const templateVars = { username: req.cookies.username };
   res.render("urls_new");
 });
 
@@ -43,7 +44,7 @@ app.get("/urls/:id", (req, res) => {
   const id = req.params.id;           // Gets ID from route
   const longURL = urlDatabase[id];    // Checks database for the URL
   
-  const templateVars = { id: id, longURL: longURL};  // Defines longURL object
+  const templateVars = { id: id, longURL: longURL, username: req.cookies.username };  // Defines longURL object
   res.render("urls_show", templateVars);             // Render values
 });
 
