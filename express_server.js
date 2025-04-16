@@ -8,35 +8,35 @@ app.set("view engine", "ejs"); // EJS renders HTML templates
 
 app.use(express.urlencoded({ extended: true }));  // Middleware for reading forms
 
-const urlDatabase = {
+const urlDatabase = {      // Database storing short URLs and their longURLs counterparts
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
 };
 
-function generateRandomString() {
-  return Math.random().toString(36).substring(2, 8);
-}
+function generateRandomString() {                    // Creates random 6-char string for shortURLs
+  return Math.random().toString(36).substring(2, 8); // 36 comes from 26 letters of alphabet, and numbers 0-9
+}                                                    // substring(2, 8) clips index 2 through 8, cutting out the 0.
 
 // ============GET=============
 
-app.get("/", (req, res) => {
+app.get("/", (req, res) => {  // Root route
   res.send("Hello!");
 });
 
-app.get("/urls.json", (req, res) => {
+app.get("/urls.json", (req, res) => {  // Responds with database in JSON
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
+app.get("/hello", (req, res) => {  // Just a 'hello' page (Not important)
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-app.get("/urls", (req, res) => {
+app.get("/urls", (req, res) => {   // Main page with list of shortURLs
   const templateVars = { urls: urlDatabase, username: req.cookies.username }; // Pass username to template
   res.render("urls_index", templateVars);
 });
 
-app.get("/urls/new", (req, res) => {
+app.get("/urls/new", (req, res) => {     // Page for creating shortURLs
   const username = req.cookies["username"];
   const templateVars = { username };
   res.render("urls_new", templateVars);
@@ -85,15 +85,15 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");                 // Redirects user to main page
 });
 
-app.post("/login", (req, res) => {      // Gets username from login form
-  const username = req.body.username;   // Sets up username in cookie
-  res.cookie("username", username);     // Redirects to urls page
-  res.redirect("/urls");
+app.post("/login", (req, res) => {      
+  const username = req.body.username;   // Gets username from login form
+  res.cookie("username", username);     // Sets up username in cookie
+  res.redirect("/urls");                // Redirects to urls page
 });
 
-app.post("/logout", (req, res) => {
-  res.clearCookie("username");
-  res.redirect("/urls");
+app.post("/logout", (req, res) => {     
+  res.clearCookie("username");          // Clears username cookie, logging user out
+  res.redirect("/urls");                // Redirects user to /urls page
 });
 
 app.listen(PORT, () => {
