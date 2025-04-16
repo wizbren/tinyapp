@@ -1,0 +1,11 @@
+<h1>Register</h1>     <!--Heading-->
+<form method="POST" action="/register">   <!--Submits data using POST to /register route-->
+
+  <label for="email">Email</label>        <!--Email input field, with 'name' as the backend key. Cannot be empty due to 'required'-->
+  <input type="email" name="email" id="email" required />
+
+  <label for="password">Password</label>  <!--Password input field, with 'name' as the backend key. Cannot be empty due to 'required'-->
+  <input type="password" name="password" id="password" required />
+
+  <button type="submit">Register</button> <!--'Register' button that submits form-->
+</form>
