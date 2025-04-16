@@ -17,10 +17,14 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
+      <% if (username) { %>            <!--Check cookie for username--> 
+        <span> Welcome <%= username %>.</span>
+      <% } else { %>                   <!--If no username exists, show login form-->
       <form method="POST" action="/login">
         <input type="text" name="username" placeholder="Enter Username" />
         <button type="submit">Login</button>
       </form>
+      <% } %>
     </div>
   </nav>
 </header>
