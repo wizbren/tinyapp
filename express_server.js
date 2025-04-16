@@ -45,20 +45,23 @@ app.get("/urls/new", (req, res) => {     // Page for creating shortURLs
 app.get("/urls/:id", (req, res) => {
   const id = req.params.id;           // Gets ID from route
   const longURL = urlDatabase[id];    // Checks database for the URL
-  
   const templateVars = { id: id, longURL: longURL, username: req.cookies.username };  // Defines longURL object
   res.render("urls_show", templateVars);             // Render values
 });
 
 app.get("/u/:id", (req, res) => {
-  const id = req.params.id;         // Gets shortURL id
-  const longURL = urlDatabase[id];  // Checks longURL in database
+  const id = req.params.id;           // Gets shortURL id
+  const longURL = urlDatabase[id];    // Checks longURL in database
 
   if (longURL) {
-    res.redirect(longURL);          // Redirects to correct page
+    res.redirect(longURL);            // Redirects to correct page
   } else {
     res.status(404).send("Short URL not found."); // 404 error message
   }
+});
+
+app.get('/register', (req, res) => {  // Route to the register form page
+  res.render('register');             // Renders register.ejs template for user on /register page
 });
 
 // ============POST=============
@@ -67,7 +70,6 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;  // Gets longURL from form
   const id = generateRandomString(); // Creates shortURL id
   urlDatabase[id] = longURL;         // Saves both short and long to database...(?)
-  
   res.redirect(`/urls/${id}`);       // Redirect to the shortURL page
 });
 
@@ -81,7 +83,6 @@ app.post("/urls/:id", (req, res) => {
   const id = req.params.id;              // Gets shortURL from id
   const newLongURL = req.body.longURL; // Gets new longURL from form(?)
   urlDatabase[id] = newLongURL;          // Updates database
-
   res.redirect("/urls");                 // Redirects user to main page
 });
 
