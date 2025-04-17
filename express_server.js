@@ -13,6 +13,19 @@ const urlDatabase = {      // Database storing short URLs and their longURLs cou
   "9sm5xK": "http://www.google.com",
 };
 
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
+
 function generateRandomString() {                    // Creates random 6-char string for shortURLs
   return Math.random().toString(36).substring(2, 8); // 36 comes from 26 letters of alphabet, and numbers 0-9
 }                                                    // substring(2, 8) clips index 2 through 8, cutting out the 0.
