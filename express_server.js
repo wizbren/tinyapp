@@ -44,22 +44,27 @@ app.get("/hello", (req, res) => {  // Just a 'hello' page (Not important)
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-app.get("/urls", (req, res) => {   // Main page with list of shortURLs
-  const templateVars = { urls: urlDatabase, username: req.cookies.username }; // Pass username to template
+app.get("/urls", (req, res) => {          // Page with list of shortURLs
+  const userId = req.cookies.user_id;     // Get user ID from cookie
+  const user = users[userId];             // Checks for user in users object
+  const templateVars = { urls: urlDatabase, user }; // Pass user to template
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {     // Page for creating shortURLs
-  const username = req.cookies["username"];
-  const templateVars = { username };
+  const userId = req.cookies.user_id;    // Get user ID from cookie
+  const user = users[userId];            // Checks for user in users object
+  const templateVars = { user };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
-  const id = req.params.id;           // Gets ID from route
-  const longURL = urlDatabase[id];    // Checks database for the URL
-  const templateVars = { id: id, longURL: longURL, username: req.cookies.username };  // Defines longURL object
-  res.render("urls_show", templateVars);             // Render values
+  const id = req.params.id;                   // Get shortURL ID from route
+  const longURL = urlDatabase[id];            // Get corresponding longURL
+  const userId = req.cookies.user_id;         // Get user ID from cookie
+  const user = users[userId];                 // Lookup user in users object
+  const templateVars = { id, longURL, user }; // Pass user data to template
+  res.render("urls_show", templateVars);             
 });
 
 app.get("/u/:id", (req, res) => {
@@ -94,7 +99,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;              // Gets shortURL from id
-  const newLongURL = req.body.longURL; // Gets new longURL from form(?)
+  const newLongURL = req.body.longURL;   // Gets new longURL from form(?)
   urlDatabase[id] = newLongURL;          // Updates database
   res.redirect("/urls");                 // Redirects user to main page
 });
@@ -108,6 +113,21 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {     
   res.clearCookie("username");          // Clears username cookie, logging user out
   res.redirect("/urls");                // Redirects user to /urls page
+});
+
+app.post("/register", (req, res) => {
+  const { email, password } = req.body;  // Gets email/password from form
+  const id = generateRandomString();     // Generate unique ID for new user
+  const newUser = {                      // newUser object (obviously)
+    id,
+    email,
+    password
+  };
+  
+  users[id] = newUser;             // New user added to newUser object
+  res.cookie("user_id", id);       // Sets cookie with new user's ID
+  console.log("Updated users:", users);  // Test to make sure user is being logged, commenting out until needed*
+  res.redirect("/urls");           // Redirects to main page
 });
 
 app.listen(PORT, () => {
