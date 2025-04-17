@@ -127,6 +127,18 @@ app.post("/logout", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, password } = req.body;  // Gets email/password from form
+
+  if (!email || !password) {             // Check #1: If there is no email or password
+    return res.status(400).send("Email and password cannot be empty"); // Throw 400 error with message
+  }
+
+  for (const userId in users) {          // Loops through all user IDs in user object
+    const user = users[userId];          // Retrieve user objects using userID
+    if (user.email === email) {          // Check to make sure user email is not already taken
+      return res.status(400).send("Email already registered."); // If taken, throw a 400 status with message
+    }
+  }
+
   const id = generateRandomString();     // Generate unique ID for new user
   const newUser = {                      // newUser object (obviously)
     id,
@@ -136,7 +148,7 @@ app.post("/register", (req, res) => {
   
   users[id] = newUser;             // New user added to newUser object
   res.cookie("user_id", id);       // Sets cookie with new user's ID
-  console.log("Updated users:", users);  // Test to make sure user is being logged, commenting out until needed*
+//  console.log("Updated users:", users);  // Test to make sure user is being logged, commenting out until needed*
   res.redirect("/urls");           // Redirects to main page
 });
 
