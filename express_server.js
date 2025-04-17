@@ -86,6 +86,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  const userId = req.cookies.user_id;
   const user = users[userId];          // Gets user id 
   const templateVars = { user };       // Pass user to template
   res.render("login", templateVars);   // Render login page
