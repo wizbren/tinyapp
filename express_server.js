@@ -78,8 +78,11 @@ app.get("/u/:id", (req, res) => {
   }
 });
 
-app.get('/register', (req, res) => {  // Route to the register form page
-  res.render('register');             // Renders register.ejs template for user on /register page
+app.get('/register', (req, res) => {
+  const userId = req.cookies.user_id;  // Get user ID from cookie
+  const user = users[userId];          // Check for user in users object
+  const templateVars = { user };       // Pass user data to template
+  res.render('register', templateVars);             
 });
 
 // ============POST=============
@@ -105,13 +108,20 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {      
-  const username = req.body.username;   // Gets username from login form
-  res.cookie("username", username);     // Sets up username in cookie
-  res.redirect("/urls");                // Redirects to urls page
+  const { email } = req.body;            // Gets email from login form
+  
+  for (const userId in users) {          // Loops through users in users object
+    const user = users[userId];          // Gets user ID from users object
+    if (user.email === email) {          // Checks submitted email for a match
+      res.cookie("user_id", user.id);    // If true, set cookie with user's ID and log in
+      return res.redirect("/urls");      // Redirect user to main shortURL page
+    }
+  }
+  res.status(403).send("No email found"); // ***DOES THIS WORK???***             
 });
 
 app.post("/logout", (req, res) => {     
-  res.clearCookie("username");          // Clears username cookie, logging user out
+  res.clearCookie("user_id");           // Clears user_id cookie, logging user out
   res.redirect("/urls");                // Redirects user to /urls page
 });
 
