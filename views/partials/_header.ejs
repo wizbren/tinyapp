@@ -23,10 +23,8 @@
           <button type="submit">Log Out</button> <!--POST logout button-->
         </form>
       <% } else { %>                       <!--If no user exists, show login form-->
-      <form method="POST" action="/login">
-        <input type="text" name="email" placeholder="Enter Email" />
-        <button type="submit">Login</button>   <!--POST login button-->
-      </form>
+        <a class="nav-item nav-link" href="/login">Login</a>   <!--Link to login-->
+        <a class="nav-item nav-link" href="/register">Register</a>  <!--Link to password-->
       <% } %>
     </div>
   </nav>
