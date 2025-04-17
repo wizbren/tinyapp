@@ -85,6 +85,12 @@ app.get('/register', (req, res) => {
   res.render('register', templateVars);             
 });
 
+app.get("/login", (req, res) => {
+  const user = users[userId];          // Gets user id 
+  const templateVars = { user };       // Pass user to template
+  res.render("login", templateVars);   // Render login page
+});
+
 // ============POST=============
 
 app.post("/urls", (req, res) => {
