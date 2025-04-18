@@ -168,9 +168,24 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  const id = req.params.id;          // Gets shortURL id
-  delete urlDatabase[id];            // DELETE the id from database
-  res.redirect("/urls");             // Redirects user back to main page
+  const id = req.params.id;             // Gets shortURL id
+  const userId = req.cookies.user_id;   // Get logged-in user ID from cookie
+  const urlData = urlDatabase[id];      // Get URL object from database
+
+  if (!urlData) {        // If URL doesn't exist, send error message
+    return res.status(404).send("Error: URL not found.");
+  }
+
+  if (!userId) {         // If user isn't logged in, send error message
+    return res.status(401).send("Error: You must be logged in.");
+  }
+
+  if (urlData.userID !== userId) {      // If URL doesn't belong to user, send error message
+    return res.status(403).send("Error: You do not have permission.");
+  }
+
+  delete urlDatabase[id];               // DELETE the id from database
+  res.redirect("/urls");                // Redirects user back to main page
 });
 
 app.post("/urls/:id", (req, res) => {
