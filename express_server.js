@@ -30,6 +30,16 @@ function generateRandomString() {                    // Creates random 6-char st
   return Math.random().toString(36).substring(2, 8); // 36 comes from 26 letters of alphabet, and numbers 0-9
 }                                                    // substring(2, 8) clips index 2 through 8, cutting out the 0.
 
+// *** HELPER FUNCTION *** // This function helps look up user in the users object, using email
+const getUsersByEmail = (email, usersDatabase) => {
+  for (const userId in usersDatabase) {
+    const user = usersDB[userId];    // Get each user object
+    if (user.email === email)        // If emails match, return the user
+      return user;
+  }
+  return null;                       // Return null if there is no match 
+}
+
 // ============GET=============
 
 app.get("/", (req, res) => {  // Root route
