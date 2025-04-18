@@ -8,9 +8,15 @@ app.set("view engine", "ejs"); // EJS renders HTML templates
 
 app.use(express.urlencoded({ extended: true }));  // Middleware for reading forms
 
-const urlDatabase = {      // Database storing short URLs and their longURLs counterparts
-  b2xVn2: "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
+const urlDatabase = {
+  b2xVn2: {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID"
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "user2RandomID"
+    },
 };
 
 const users = {
@@ -75,22 +81,26 @@ app.get("/urls/new", (req, res) => {     // Page for creating shortURLs
 
 app.get("/urls/:id", (req, res) => {
   const id = req.params.id;                   // Get shortURL ID from route
-  const longURL = urlDatabase[id];            // Get corresponding longURL
+  const urlData = urlDatabase[id];            // Get corresponding longURL
   const userId = req.cookies.user_id;         // Get user ID from cookie
   const user = users[userId];                 // Lookup user in users object
-  const templateVars = { id, longURL, user }; // Pass user data to template
-  res.render("urls_show", templateVars);             
+
+  if (!urlData) {                             // If no shortURL is found
+    return res.status(404).send("Short URL not found"); // Send 404 message
+  }
+
+  const templateVars = { id, longURL: urlData.longURL, user }; //**Updated to access nested value
+  res.render("urls_show", templateVars);      // Render details of the shortURL
 });
 
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;           // Gets shortURL id
-  const longURL = urlDatabase[id];    // Checks longURL in database
+  const urlData = urlDatabase[id];    // Checks longURL in database
 
-  if (longURL) {                      // Checks for existence of shortURL
-    return res.redirect(longURL);     // And redirects to longURL page if so
+  if (!urlData) {                     // Checks for existence of shortURL
+    return res.status(404).send("404 Not Found: This short URL doesn't exist.");
   }
-                              // Sends error message (404) if shortURL doesn't exist
-  res.status(404).send("404 Not Found: This short URL does not exist.")
+  res.redirect(urlData.longURL);      //**Redirects to correct longURL
 });
 
 app.get('/register', (req, res) => {
@@ -129,7 +139,7 @@ app.post("/urls", (req, res) => {
 
   const longURL = req.body.longURL;  // Gets longURL from form
   const id = generateRandomString(); // Generates shortURL ID
-  urlDatabase[id] = longURL;         // Stores shortURL in database
+  urlDatabase[id] = { longURL, userID: userId}; // Store new URL as object, then link to user       
   res.redirect(`/urls/${id}`);       // Redirect to the shortURL page
 });
 
@@ -142,7 +152,10 @@ app.post("/urls/:id/delete", (req, res) => {
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;              // Gets shortURL from id
   const newLongURL = req.body.longURL;   // Gets new longURL from form(?)
-  urlDatabase[id] = newLongURL;          // Updates database
+
+  if (urlDatabase[id]) {
+    urlDatabase[id].longURL = newLongURL; //**Updates the nested longURL
+  }
   res.redirect("/urls");                 // Redirects user to main page
 });
 
