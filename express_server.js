@@ -72,6 +72,7 @@ app.get("/hello", (req, res) => {  // Just a 'hello' page (Not important)
 
 app.get("/urls", (req, res) => {          // Page with list of shortURLs
   const userId = req.cookies.user_id;     // Get user ID from cookie
+  const user = users[userId];             // Checks user with userId from cookie
 
   if (!user) {                            // If no user is logged in
     return res.status(401).send("Must be logged in to view your URLs."); // Show error
@@ -100,12 +101,20 @@ app.get("/urls/:id", (req, res) => {
   const userId = req.cookies.user_id;         // Get user ID from cookie
   const user = users[userId];                 // Lookup user in users object
 
+  if (!userId) {                         // Checks to see if user is logged in
+    return res.status(401).send("Must be logged in."); // Shows error if not
+  }
+
   if (!urlData) {                             // If no shortURL is found
     return res.status(404).send("Short URL not found"); // Send 404 message
   }
 
+  if (urlData.userID !== userId) {        // Checks to see if URL belongs to logged-in user
+    return res.status(403).send("You don't have permission to view this URL.")
+  }
+
   const templateVars = { id, longURL: urlData.longURL, user }; //**Updated to access nested value
-  res.render("urls_show", templateVars);      // Render details of the shortURL
+  res.render("urls_show", templateVars);   // Renders page for specific URL
 });
 
 app.get("/u/:id", (req, res) => {
