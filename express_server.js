@@ -64,8 +64,13 @@ app.get("/urls", (req, res) => {          // Page with list of shortURLs
 app.get("/urls/new", (req, res) => {     // Page for creating shortURLs
   const userId = req.cookies.user_id;    // Get user ID from cookie
   const user = users[userId];            // Checks for user in users object
-  const templateVars = { user };
-  res.render("urls_new", templateVars);
+
+  if (!user) {                           // Checks if user is (not) logged in
+    return res.redirect("/login");       // Redirects to login form
+  }
+                                         // If logged in
+  const templateVars = { user };         // Passes user info to template
+  res.render("urls_new", templateVars);  // Renders urls/new page
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -115,9 +120,16 @@ app.get("/login", (req, res) => {
 // ============POST=============
 
 app.post("/urls", (req, res) => {
+  const userId = req.cookies.user_id; // Gets user ID from cookie
+  const user = users[userId];         // Looks user up in users database
+
+  if (!user) {                       // Checks if user is (not) logged in
+    return res.status(401).send("You must be logged in."); // If not, sends status code and message
+  }
+
   const longURL = req.body.longURL;  // Gets longURL from form
-  const id = generateRandomString(); // Creates shortURL id
-  urlDatabase[id] = longURL;         // Saves both short and long to database...(?)
+  const id = generateRandomString(); // Generates shortURL ID
+  urlDatabase[id] = longURL;         // Stores shortURL in database
   res.redirect(`/urls/${id}`);       // Redirect to the shortURL page
 });
 
