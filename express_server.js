@@ -33,7 +33,7 @@ function generateRandomString() {                    // Creates random 6-char st
 // *** HELPER FUNCTION *** // This function helps look up user in the users object, using email
 const getUserByEmail = (email, usersDatabase) => {
   for (const userId in usersDatabase) {
-    const user = usersDB[userId];    // Get each user object
+    const user = usersDatabase[userId];    // Get each user object
     if (user.email === email)        // If emails match, return the user
       return user;
   }
