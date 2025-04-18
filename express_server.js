@@ -28,17 +28,17 @@ const users = {
 
 function generateRandomString() {                    // Creates random 6-char string for shortURLs
   return Math.random().toString(36).substring(2, 8); // 36 comes from 26 letters of alphabet, and numbers 0-9
-}                                                    // substring(2, 8) clips index 2 through 8, cutting out the 0.
+};                                                   // substring(2, 8) clips index 2 through 8, cutting out the 0.
 
 // *** HELPER FUNCTION *** // This function helps look up user in the users object, using email
-const getUsersByEmail = (email, usersDatabase) => {
+const getUserByEmail = (email, usersDatabase) => {
   for (const userId in usersDatabase) {
     const user = usersDB[userId];    // Get each user object
     if (user.email === email)        // If emails match, return the user
       return user;
   }
   return null;                       // Return null if there is no match 
-}
+};
 
 // ============GET=============
 
@@ -125,16 +125,20 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {      
-  const { email } = req.body;            // Gets email from login form
-  
-  for (const userId in users) {          // Loops through users in users object
-    const user = users[userId];          // Gets user ID from users object
-    if (user.email === email) {          // Checks submitted email for a match
-      res.cookie("user_id", user.id);    // If true, set cookie with user's ID and log in
-      return res.redirect("/urls");      // Redirect user to main shortURL page
-    }
+  const email = req.body.email;               // Get email from login form
+  const password = req.body.password;         // Get password from login form
+  const user = getUserByEmail(email, users);  // Uses function to look up user email
+
+  if (!user) {
+    res.statusCode = 403;              // Status code 403 = Forbidden
+    return res.send("Email not found");
   }
-  res.status(403).send("No email found"); // ***DOES THIS WORK???***             
+  if (user.password !== password) {
+    res.statusCode = 403;              // Status code 403 = Forbidden
+    return res.send("Wrong password");
+  }
+  res.cookie("user_id", user.id);      // Sets up cookie with user ID
+  res.redirect("/urls");               // Redirects to main page
 });
 
 app.post("/logout", (req, res) => {     
