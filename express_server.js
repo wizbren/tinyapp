@@ -90,16 +90,26 @@ app.get("/u/:id", (req, res) => {
 
 app.get('/register', (req, res) => {
   const userId = req.cookies.user_id;  // Get user ID from cookie
-  const user = users[userId];          // Check for user in users object
-  const templateVars = { user };       // Pass user data to template
-  res.render('register', templateVars);             
+  const user = users[userId];          // Check for user in users database
+
+  if (user) {
+    return res.redirect("/urls");
+  }
+                                        // If user isn't logged in, redirect to registration form
+  const templateVars = { user: null };  // Sets user to null (not logged in)
+  res.render('register', templateVars); // Render registration form            
 });
 
 app.get("/login", (req, res) => {
-  const userId = req.cookies.user_id;
-  const user = users[userId];          // Gets user id 
-  const templateVars = { user };       // Pass user to template
-  res.render("login", templateVars);   // Render login page
+  const userId = req.cookies.user_id;  // Gets user ID from cookie
+  const user = users[userId];          // Looks user up in users database
+
+  if (user) {                          // If matched, confirms user is logged in
+    return res.redirect("/urls");      // Redirect logged-in users to main
+  }
+                                       // If user isn't logged in, redirect to login form
+  const templateVars = { user: null }; // Sets user to null (not logged in)
+  res.render("login", templateVars);   // Render login form
 });
 
 // ============POST=============
