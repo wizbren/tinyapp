@@ -86,11 +86,11 @@ app.get("/u/:id", (req, res) => {
   const id = req.params.id;           // Gets shortURL id
   const longURL = urlDatabase[id];    // Checks longURL in database
 
-  if (longURL) {
-    res.redirect(longURL);            // Redirects to correct page
-  } else {
-    res.status(404).send("Short URL not found."); // 404 error message
+  if (longURL) {                      // Checks for existence of shortURL
+    return res.redirect(longURL);     // And redirects to longURL page if so
   }
+                              // Sends error message (404) if shortURL doesn't exist
+  res.status(404).send("404 Not Found: This short URL does not exist.")
 });
 
 app.get('/register', (req, res) => {
