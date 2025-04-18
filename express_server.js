@@ -175,11 +175,23 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;              // Gets shortURL from id
-  const newLongURL = req.body.longURL;   // Gets new longURL from form(?)
+  const userId = req.cookies.user_id;    // Get logged-in user's ID from cookie
+  const urlData = urlDatabase[id];       // Get URL object from database
 
-  if (urlDatabase[id]) {
-    urlDatabase[id].longURL = newLongURL; //**Updates the nested longURL
+  if (!urlData) {            // If URL doesn't exist, send error message
+    res.status(404).send("Error: URL not found."); 
   }
+
+  if (!userId) {             // If user isn't logged in, send error message                     
+    return res.status(401).send("Error: You must be logged in.")
+  }
+
+  if (urlData.userID !== userId) {    // If URL doesn't match with user ID, send permission error
+    return res.status(403).send("Error: You do not have permission.")
+  }
+  
+  const newLongURL = req.body.longURL;   // Get updated longURL from form
+  urlDatabase[id].longURL = newLongURL;  // Updates longURL in database
   res.redirect("/urls");                 // Redirects user to main page
 });
 
