@@ -232,7 +232,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {     
-  res.session = null;                   
+  req.session = null;                   
   res.redirect("/login");                // Redirects user to /login page
 });
 
