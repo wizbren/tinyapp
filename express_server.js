@@ -241,7 +241,7 @@ app.post("/register", (req, res) => {
   
   users[id] = newUser;             // New user added to newUser object
   req.session.user_id = id;       // Sets cookie with new user's ID
-//  console.log("Updated users:", users);  // Test to make sure user is being logged, commenting out until needed*
+
   res.redirect("/urls");           // Redirects to main page
 });
 
