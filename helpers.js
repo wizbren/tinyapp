@@ -5,7 +5,7 @@ const getUserByEmail = (email, usersDatabase) => {
     if (user.email === email)        // If emails match, return the user
       return user;
   }
-  return null;  // Return null if no user is found
+  return undefined;  // Return undefined if no user is found
 };
 
 module.exports = { getUserByEmail }
