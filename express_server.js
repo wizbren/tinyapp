@@ -1,4 +1,4 @@
-const { getUserByEmail } = require('./helpers');
+const { getUserByEmail, urlsForUser } = require('./helpers');
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const app = express();
@@ -63,7 +63,7 @@ app.get("/urls", (req, res) => {          // Page with list of shortURLs
     return res.status(401).send("Must be logged in to view your URLs."); // Show error
   }
   
-  const userURLs = urlsForUser(userId);   // Helper function gets only the URLs for logged-in user
+  const userURLs = urlsForUser(userId, urlDatabase);   // Helper function gets only the URLs for logged-in user
   const templateVars = { urls: userURLs, user: users[userId] }; // Pass logged-in user info to template
   res.render("urls_index", templateVars); // Render URLs page with user's data
 });
