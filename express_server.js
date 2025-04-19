@@ -216,14 +216,14 @@ app.post("/login", (req, res) => {
   const password = req.body.password;         // Get password from login form
   const user = getUserByEmail(email, users);  // Uses function to look up user email
 
-  if (!user) {                          // If user ID doesn't match with existing in database
-    res.statusCode = 403;            
-    return res.send("Email not found"); // Send user error message
+  if (!user) {                          // If user ID doesn't match with existing in database            
+    return res.status(403).send("Email not found"); // Send user error message
   }
-  if (!bcrypt.compareSync(password, user.password)) { // Compares plaintext password from form with
-    res.statusCode = 403;                             //hashed password stored in database
-    return res.send("Wrong password");                // Send error message if no match found
+                                        
+  if (!bcrypt.compareSync(password, user.password)) { // Checks if entered password matches                    
+    return res.status(403).send("Wrong password");    // a stored hashed password            
   }
+
   res.cookie("user_id", user.id);      // Sets up cookie with user ID
   res.redirect("/urls");               // Redirects to main page
 });
