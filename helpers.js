@@ -8,4 +8,15 @@ const getUserByEmail = (email, usersDatabase) => {
   return undefined;  // Return undefined if no user is found
 };
 
-module.exports = { getUserByEmail }
+//***HELPER***// This function returns only the URLs for a particular user
+const urlsForUser = function(id) {
+  const userURLs = {};                      // Empty object to store filtered URLs
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].userID === id) {   // Compare userID of URL to logged-in user
+      userURLs[url] = urlDatabase[url];     // Add the URL to logged-in user's object
+    }
+  }
+  return userURLs;       // Returns filtered user URLs
+};
+
+module.exports = { getUserByEmail, urlsForUser }
