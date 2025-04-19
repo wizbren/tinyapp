@@ -1,3 +1,4 @@
+const { getUserByEmail } = require('./helpers');
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const app = express();
@@ -5,7 +6,7 @@ const cookieSession = require('cookie-session');
 app.use(cookieSession({
   name: 'session',
   keys: ['your-secret-key-here'],
-}))
+}));
 
 const PORT = 8080;             // default port 8080
 app.set("view engine", "ejs"); // EJS renders HTML templates
@@ -39,16 +40,6 @@ const users = {
 function generateRandomString() {                    // Creates random 6-char string for shortURLs
   return Math.random().toString(36).substring(2, 8); // 36 comes from 26 letters of alphabet, and numbers 0-9
 };                                                   // substring(2, 8) clips index 2 through 8, cutting out the 0.
-
-//***HELPER***// This function helps look up user in the users object, using email
-const getUserByEmail = (email, usersDatabase) => {
-  for (const userId in usersDatabase) {
-    const user = usersDatabase[userId];    // Get each user object
-    if (user.email === email)        // If emails match, return the user
-      return user;
-  }
-  return null;  // Return a message notifying user
-};
 
 //***HELPER***// This function returns only the URLs for a particular user
 const urlsForUser = function(id) {
