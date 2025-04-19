@@ -44,7 +44,7 @@ const getUserByEmail = (email, usersDatabase) => {
     if (user.email === email)        // If emails match, return the user
       return user;
   }
-  return "There is no user belonging to that email";  // Return a message notifying user
+  return null;  // Return a message notifying user
 };
 
 //***HELPER***// This function returns only the URLs for a particular user
