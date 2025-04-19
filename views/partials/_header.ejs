@@ -17,14 +17,14 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-      <% if (user) { %>                    <!--Check cookie for user--> 
-        <span> Welcome <%= user.email %>.</span> <!--Welcome user (if it exists)-->
+      <% if (user) { %>                    
+        <span> Welcome <%= user.email %>.</span> 
         <form method="POST" action="/logout">  
-          <button type="submit">Log Out</button> <!--POST logout button-->
+          <button type="submit">Log Out</button>
         </form>
-      <% } else { %>                       <!--If no user exists, show login form-->
-        <a class="nav-item nav-link" href="/login">Login</a>   <!--Link to login-->
-        <a class="nav-item nav-link" href="/register">Register</a>  <!--Link to registration-->
+      <% } else { %>                       
+        <a class="nav-item nav-link" href="/login">Login</a>   
+        <a class="nav-item nav-link" href="/register">Register</a> 
       <% } %>
     </div>
   </nav>
