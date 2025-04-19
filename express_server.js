@@ -1,8 +1,11 @@
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const app = express();
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());   // Middleware for reading/writing cookies
+const cookieSession = require('cookie-session');
+app.use(cookieSession({
+  name: 'session',
+  keys: ['your-secret-key-here'],
+}))
 
 const PORT = 8080;             // default port 8080
 app.set("view engine", "ejs"); // EJS renders HTML templates
@@ -72,7 +75,7 @@ app.get("/hello", (req, res) => {  // Just a 'hello' page (Not important)
 });
 
 app.get("/urls", (req, res) => {          // Page with list of shortURLs
-  const userId = req.cookies.user_id;     // Get user ID from cookie
+  const userId = req.session.user_id;     // Get user ID from cookie
   const user = users[userId];             // Checks user with userId from cookie
 
   if (!user) {                            // If no user is logged in
@@ -85,7 +88,7 @@ app.get("/urls", (req, res) => {          // Page with list of shortURLs
 });
 
 app.get("/urls/new", (req, res) => {     // Page for creating shortURLs
-  const userId = req.cookies.user_id;    // Get user ID from cookie
+  const userId = req.session.user_id;    // Get user ID from cookie
   const user = users[userId];            // Checks for user in users object
 
   if (!user) {                           // Checks if user is (not) logged in
@@ -99,7 +102,7 @@ app.get("/urls/new", (req, res) => {     // Page for creating shortURLs
 app.get("/urls/:id", (req, res) => {
   const id = req.params.id;                   // Get shortURL ID from route
   const urlData = urlDatabase[id];            // Get corresponding longURL
-  const userId = req.cookies.user_id;         // Get user ID from cookie
+  const userId = req.session.user_id;         // Get user ID from cookie
   const user = users[userId];                 // Lookup user in users object
 
   if (!userId) {                         // Checks to see if user is logged in
@@ -129,7 +132,7 @@ app.get("/u/:id", (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  const userId = req.cookies.user_id;  // Get user ID from cookie
+  const userId = req.session.user_id;  // Get user ID from cookie
   const user = users[userId];          // Check for user in users database
 
   if (user) {
@@ -141,7 +144,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  const userId = req.cookies.user_id;  // Gets user ID from cookie
+  const userId = req.session.user_id;  // Gets user ID from cookie
   const user = users[userId];          // Looks user up in users database
 
   if (user) {                          // If matched, confirms user is logged in
@@ -155,7 +158,7 @@ app.get("/login", (req, res) => {
 // ============POST=============
 
 app.post("/urls", (req, res) => {
-  const userId = req.cookies.user_id; // Gets user ID from cookie
+  const userId = req.session.user_id; // Gets user ID from cookie
   const user = users[userId];         // Looks user up in users database
 
   if (!user) {                       // Checks if user is (not) logged in
@@ -170,7 +173,7 @@ app.post("/urls", (req, res) => {
 
 app.post("/urls/:id/delete", (req, res) => {
   const id = req.params.id;             // Gets shortURL id
-  const userId = req.cookies.user_id;   // Get logged-in user ID from cookie
+  const userId = req.session.user_id;   // Get logged-in user ID from cookie
   const urlData = urlDatabase[id];      // Get URL object from database
 
   if (!urlData) {        // If URL doesn't exist, send error message
@@ -191,7 +194,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;              // Gets shortURL from id
-  const userId = req.cookies.user_id;    // Get logged-in user's ID from cookie
+  const userId = req.session.user_id;    // Get logged-in user's ID from cookie
   const urlData = urlDatabase[id];       // Get URL object from database
 
   if (!urlData) {            // If URL doesn't exist, send error message
@@ -224,12 +227,12 @@ app.post("/login", (req, res) => {
     return res.status(403).send("Wrong password");    // a stored hashed password            
   }
 
-  res.cookie("user_id", user.id);      // Sets up cookie with user ID
+  req.session.user_id = user.id;      
   res.redirect("/urls");               // Redirects to main page
 });
 
 app.post("/logout", (req, res) => {     
-  res.clearCookie("user_id");           // Clears user_id cookie, logging user out
+  res.session = null;                   
   res.redirect("/login");                // Redirects user to /login page
 });
 
@@ -256,7 +259,7 @@ app.post("/register", (req, res) => {
   };
   
   users[id] = newUser;             // New user added to newUser object
-  res.cookie("user_id", id);       // Sets cookie with new user's ID
+  req.session.user_id = id;       // Sets cookie with new user's ID
 //  console.log("Updated users:", users);  // Test to make sure user is being logged, commenting out until needed*
   res.redirect("/urls");           // Redirects to main page
 });
