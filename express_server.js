@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
@@ -247,10 +248,11 @@ app.post("/register", (req, res) => {
   }
 
   const id = generateRandomString();     // Generate unique ID for new user
+  const hashedPassword = bcrypt.hashSync(password, 10);
   const newUser = {                      // newUser object (obviously)
     id,
     email,
-    password
+    password: hashedPassword
   };
   
   users[id] = newUser;             // New user added to newUser object
