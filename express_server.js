@@ -95,7 +95,7 @@ app.get("/urls/:id", (req, res) => {
   }
 
   const templateVars = { id, longURL: urlData.longURL, user }; //**Updated to access nested value
-  res.render("urls_show", templateVars);   // Renders page for specific URL
+  res.render("urls_show", templateVars);;   // Renders page for specific URL
 });
 
 app.get("/u/:id", (req, res) => {
@@ -105,7 +105,7 @@ app.get("/u/:id", (req, res) => {
   if (!urlData) {                     // Checks for existence of shortURL
     return res.status(404).send("404 Not Found: This short URL doesn't exist.");
   }
-  res.redirect(urlData.longURL);      //**Redirects to correct longURL
+  res.render("urls_show", templateVars);      //**Redirects to correct longURL
 });
 
 app.get('/register', (req, res) => {
