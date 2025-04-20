@@ -1,4 +1,4 @@
-const { getUserByEmail, urlsForUser } = require('./helpers');
+const { getUserByEmail, urlsForUser, generateRandomString } = require('./helpers');
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const app = express();
@@ -36,10 +36,6 @@ const users = {
     password: bcrypt.hashSync("dishwasher-funk", 10),
   },
 };
-
-function generateRandomString() {                    // Creates random 6-char string for shortURLs
-  return Math.random().toString(36).substring(2, 8); // 36 comes from 26 letters of alphabet, and numbers 0-9
-};                                                   // substring(2, 8) clips index 2 through 8, cutting out the 0.
 
 // ============GET=============
 
