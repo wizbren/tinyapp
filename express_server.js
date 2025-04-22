@@ -52,10 +52,6 @@ app.get("/urls.json", (req, res) => {  // Responds with database in JSON
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {  // Just a 'hello' page (Not important)
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 app.get("/urls", (req, res) => {          // Page with list of shortURLs
   const userId = req.session.user_id;     // Get user ID from cookie
   const user = users[userId];             // Checks user with userId from cookie
