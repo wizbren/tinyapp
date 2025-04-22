@@ -39,8 +39,13 @@ const users = {
 
 // ============GET=============
 
-app.get("/", (req, res) => {  // Root route
-  res.send("Hello!");
+app.get("/", (req, res) => {
+  const userId = req.session.user_id;
+
+  if (userId && users[userId]) {
+    return res.redirect("/urls");   // If user is logged in, redirect to /urls
+  }
+  res.redirect("/login");           // If not logged in, redirect to /login
 });
 
 app.get("/urls.json", (req, res) => {  // Responds with database in JSON
